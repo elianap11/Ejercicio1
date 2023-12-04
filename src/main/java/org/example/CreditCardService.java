@@ -6,6 +6,7 @@ import java.util.Locale;
 public class CreditCardService {
 
     private static final double TRANSACTION_LIMIT = 1000;
+
     public void displayCard(CreditCard creditCard) {
         System.out.println(creditCard);
     }
@@ -14,7 +15,7 @@ public class CreditCardService {
         return amount < TRANSACTION_LIMIT;
     }
 
-   public boolean validateCard(CreditCard creditCard) {
+    public boolean validateCard(CreditCard creditCard) {
         return creditCard.getExpirationDate().isAfter(LocalDate.now());
     }
 
@@ -23,11 +24,12 @@ public class CreditCardService {
     }
 
     public double calculateRate(CreditCard creditCard, double amount) {
+
         double rate = 0;
 
         switch (creditCard.getBrand()) {
             case VISA:
-                rate = LocalDate.now().getYear() / (double) LocalDate.now().getMonthValue();
+                rate = (double) LocalDate.now().getYear() / LocalDate.now().getMonthValue() / 100;
                 break;
             case NARA:
                 rate = LocalDate.now().getDayOfMonth() * 0.5;
@@ -39,11 +41,10 @@ public class CreditCardService {
                 throw new IllegalArgumentException("Marca de tarjeta de crédito inválida: " + creditCard.getBrand());
         }
 
-        double calculatedRate = amount * (rate / 100.0);
-
-        return Double.parseDouble(String.format(Locale.US, "%.2f", calculatedRate));
+        return rate;
 
     }
+
 
 }
 

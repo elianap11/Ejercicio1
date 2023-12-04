@@ -1,7 +1,6 @@
 package org.example;
 
 import exceptions.InvalidCreditCardException;
-import exceptions.InvalidDateMonthException;
 import exceptions.InvalidTransactionException;
 
 import java.time.DateTimeException;
@@ -9,7 +8,7 @@ import java.time.LocalDate;
 
 public class CreditCardApp {
 
-    public static void main(String[] args) throws InvalidDateMonthException {
+    public static void main(String[] args) {
 
         try {
 
@@ -20,7 +19,7 @@ public class CreditCardApp {
                     "Beverly Marsh", LocalDate.of(2024, 1, 15));
 
             CreditCard card3 = createCreditCard(CreditCardBrand.AMEX, "4321-5326-1111-7989",
-                    "Stanley Uris", LocalDate.of(2023, 99, 30));
+                    "Stanley Uris", LocalDate.of(2023, 12, 30));
 
 
             /*Harcodeado para probar tarjetas iguales
@@ -39,25 +38,33 @@ public class CreditCardApp {
                 System.out.println("Las tarjetas de crédito " + card1.getNumber() + " y " + card2.getNumber() + " son iguales");
             }
 
-        } catch (DateTimeException | InvalidCreditCardException | InvalidDateMonthException | InvalidTransactionException e) {
+        } catch (DateTimeException | InvalidCreditCardException | InvalidTransactionException e) {
             System.err.println("Error: " + e.getMessage());
         }
     }
 
     private static CreditCard createCreditCard(CreditCardBrand brand, String number,
-                                               String cardHolder, LocalDate expirationDate) throws InvalidCreditCardException, InvalidDateMonthException {
+                                               String cardHolder, LocalDate expirationDate) throws InvalidCreditCardException {
 
-          if (!isValidCardNumber(number)) {
-              throw new InvalidCreditCardException("Número de tarjeta de crédito no válido");
-          }
+        try {
 
-          if (expirationDate.isBefore(LocalDate.now())) {
-              throw new InvalidDateMonthException("La fecha de vencimiento no puede ser anterior a la fecha actual");
-          }
+            if (!isValidCardNumber(number)) {
+                throw new InvalidCreditCardException("Número de tarjeta de crédito no válido");
+            }
 
-        return new CreditCard(brand, number, cardHolder, expirationDate);
+            if (expirationDate.isBefore(LocalDate.now())) {
+                throw new DateTimeException("La fecha de vencimiento no puede ser anterior a la fecha actual");
+            }
+
+            return new CreditCard(brand, number, cardHolder, expirationDate);
+
+        } catch (InvalidCreditCardException e) {
+            System.err.println("Error al crear la tarjeta: " + e.getMessage());
+            return new CreditCard();
+        } catch (DateTimeException e) {
+            throw new RuntimeException(e);
+        }
     }
-
 
     private static void processCreditCard(CreditCardService service, CreditCard card, double amount) throws InvalidTransactionException {
         System.out.println();
@@ -80,7 +87,8 @@ public class CreditCardApp {
         }
 
         double rate = service.calculateRate(card, amount);
-        System.out.println("Tarjeta " + card.getBrand() + " - " + "Monto: " + amount + " - " + "Tasa: " + rate);
+        System.out.println("Tarjeta " + card.getBrand() + " - " + "Monto: " + amount + " - " + "Tasa: " + String.format("%.2f%%", rate));
+
     }
 
     private static boolean isValidCardNumber(String cardNumber) {

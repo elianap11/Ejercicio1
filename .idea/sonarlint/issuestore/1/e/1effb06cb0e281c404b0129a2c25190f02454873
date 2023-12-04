@@ -1,3 +1,6 @@
 
-G	java:S106
-"+Replace this use of System.out by a logger.(Â€Ø…8«ğóîÁ1
+G	java:S106"+Replace this use of System.out by a logger.(Â€Ø…8…¹³Ã1
+O
+java:S1172"-Remove this unused method parameter "amount".(àºäûÿÿÿÿ8£Î·³Ã1
+O
+java:S1128"-Remove this unused import 'java.util.Locale'.(åğ×±ûÿÿÿÿ8ËòÖ³Ã1

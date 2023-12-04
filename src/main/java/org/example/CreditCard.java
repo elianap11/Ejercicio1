@@ -58,7 +58,6 @@ public class CreditCard {
                 + cardHolder + ", Vencimiento: " + expirationDate + ".";
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
